@@ -3,3 +3,9 @@
 /dl4ds/.ipynb_checkpoints/
 *.pyc
 *.DS_Store
+/.keras
+/.climetlab
+/.cache
+/.jupyter
+/.ipython
+/.local
