@@ -41,7 +41,7 @@ setup(
         ],
     install_requires=[
     'numpy<2',
-    'pandas<2',
+    'pandas',
     'scipy',
     'matplotlib',
     'xarray',
