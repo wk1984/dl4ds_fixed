@@ -1,0 +1,81 @@
+[build-system]
+# 指定构建后端和所需的依赖项
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dl4ds"
+# version 字段通常用于静态版本。由于您的版本是动态获取的，
+# 您可以在 setup.cfg 或 [tool.setuptools] 中配置 setuptools 来读取它。
+# 另一种常见做法是使用 setuptools-scm 来从 Git 标签中获取版本。
+# 为了让 setuptools 继续在 setup.py 中获取版本，可以省略此字段，
+# 或在 setup.cfg 中配置 setuptools_scm。
+# 如果您要完全迁移到 pyproject.toml 且希望版本是静态的，则需要手动设置：
+# version = "0.0.1" 
+
+description = "Deep Learning for empirical DownScaling"
+readme = "README.md"
+authors = [
+    {name = "Carlos Alberto Gomez Gonzalez", email = "carlos.gomez@bsc.es"},
+]
+license = {text = "Apache v2.0"} # 或者 license = {file = "LICENSE"} 如果您有 LICENSE 文件
+keywords = [
+    "deep learning", 
+    "downscaling", 
+    "super-resolution", 
+    "neural networks",
+    "Earth data",
+    "EO",
+]
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Operating System :: POSIX :: Linux",
+    "Natural Language :: English",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering",
+]
+urls = {homepage = "https://github.com/carlgogo/dl4ds"}
+
+# 核心依赖项
+dependencies = [
+    "numpy<2",
+    "pandas<2",
+    "scipy",
+    "matplotlib",
+    "xarray",
+    "ecubevis",
+    # 注意: PEP 621 不直接支持 setup.py 中的 'tensorflow<2.11', 'tensorflow-gpu<2.11'
+    # 这种形式的依赖项。您需要选择其中一个作为主要依赖，或将它们都列出。
+    # 更好的做法是在 [project.optional-dependencies] 中处理 GPU 或特定环境依赖。
+    "tensorflow<2.11", # 选择 tensorflow 作为主要依赖项
+    "keras<2.11",
+    "scikit-learn",
+]
+
+[project.optional-dependencies]
+# extras_require 转换为 optional-dependencies
+horovod = ["horovod"]
+# 您可能还想添加一个 'gpu' 选项来代替核心依赖中的 tensorflow-gpu
+gpu = ["tensorflow-gpu<2.11"] 
+
+
+# Setuptools 特定的配置，用于处理 setup.py 中的动态或非标准字段
+[tool.setuptools]
+# 告诉 setuptools 查找包（packages）的方式，通常用于取代 setup() 中的 packages=['...']
+# find 自动查找包，如果您的包结构很简单，这是推荐的做法。
+# 另一种做法是使用 py-modules 或 package-dir。
+packages = ["dl4ds", "dl4ds.models", "dl4ds.training"] 
+
+# 或者，如果您的包是 src 布局，则配置如下：
+# package-dir = {"" = "src"}
+# packages = {find = {where = ["src"]}}
+
+# 如果您的版本号仍然通过读取文件获取，您可能需要配置 setuptools 来处理
+# 此时您可能需要将 setuptools 的配置移到 setup.cfg 中，或继续保留一个简短的 setup.py 文件
+# [tool.setuptools.dynamic]
+# version = {attr = "dl4ds.__version__"} # 如果您使用的是 setup.cfg，这将是一个选项
