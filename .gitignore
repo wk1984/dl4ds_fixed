@@ -11,3 +11,5 @@
 /.local
 /dl4ds.egg-info
 /notebooks/.ipynb_checkpoints
+/.Trash*
+/.ipynb_checkpoints
