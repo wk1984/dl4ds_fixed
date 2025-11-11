@@ -46,15 +46,10 @@ setup(
     'matplotlib',
     'xarray',
     'ecubevis',
-    'tensorflow<=2.10', 
-    'tensorflow-gpu<=2.10',
-    'keras<=2.10',
+    'tensorflow<2.11', 
+    'tensorflow-gpu<2.11',
+    'keras<2.11',
     'scikit-learn',
-    'opencv-python-headless',
-    'joblib',
-    'seaborn',
-    'absl-py',
-    'cfgrib'
     ],
     extras_require={
         'horovod':['horovod'] 
