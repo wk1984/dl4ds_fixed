@@ -37,7 +37,7 @@ ARG DL4DS=true
 RUN if [ "$DL4DS" = true ]; then \
     echo "install DL4DS ..."; \
     . /root/.bashrc; \ 
-    conda create -n dl4ds_py39_cu11 -c conda-forge python==3.9.* xarray cartopy cudatoolkit==11.* cudnn==8.* numpy==1.* -y; \
+    conda create -n dl4ds_py39_cu11 -c conda-forge python==3.9.* cartopy cudatoolkit==11.* cudnn==8.* numpy==1.* -y; \
     conda activate dl4ds_py39_cu11; \
     which python ;\
 #    pip install tensorflow==2.10.* climetlab climetlab_maelstrom_downscaling numpy==1.* ; \
