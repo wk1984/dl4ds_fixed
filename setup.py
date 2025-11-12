@@ -43,7 +43,7 @@ setup(
     'numpy>1,<2',
     'pandas<2',
     'scipy',
-    'matplotlib<3.5',
+    'matplotlib<3.9',
     'seaborn',
     'opencv-python-headless',
     'xarray',
