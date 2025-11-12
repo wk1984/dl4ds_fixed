@@ -21,7 +21,6 @@ RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/23.1
     && echo ". /opt/miniconda3/etc/profile.d/conda.sh" >> ~/.bashrc
 
 ENV PATH=/opt/miniconda3/bin:${PATH}
-ENV PATH=/opt/julia-1.10.10/bin:${PATH}
 
 RUN . /root/.bashrc \
     && /opt/miniconda3/bin/conda init bash \
@@ -37,7 +36,8 @@ RUN if [ "$DL4DS" = true ]; then \
     mamba create -n dl4ds_py39_cu11 -c conda-forge python==3.9.* xarray cartopy cudatoolkit==11.* cudnn==8.* numpy==1.* -y; \
     conda activate dl4ds_py39_cu11; \
     pip install tensorflow==2.10.* ; \
-    pip install dl4ds climetlab climetlab_maelstrom_downscaling  numpy==1.* ; \
+    pip install climetlab climetlab_maelstrom_downscaling numpy==1.* ; \
+    pip install git+https://github.com/wk1984/dl4ds_fixed.git ; \
     python -c "import tensorflow as tf; print('Built with CUDA:', tf.test.is_built_with_cuda(), 'USE GPU:', tf.config.list_physical_devices('GPU'))"; \
  	python -c "import dl4ds as dds"; \
 	fi
