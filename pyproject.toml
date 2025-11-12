@@ -1,0 +1,83 @@
+# pyproject.toml
+
+[build-system]
+# 声明构建依赖，setuptools是必需的
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# --- 核心元数据 (直接从 setup.py 转换) ---
+name = "dl4ds"
+description = "Deep Learning for empirical DownScaling"
+license = {text = "Apache-2.0"}  # 使用分类器中的SPDX标识符
+authors = [
+    {name = "Carlos Alberto Gomez Gonzalez", email = "carlos.gomez@bsc.es"}
+]
+keywords = [
+    "deep learning", 
+    "downscaling", 
+    "super-resolution", 
+    "neural networks",
+    "Earth data",
+    "EO" 
+]
+
+# --- 依赖 (从 install_requires 转换) ---
+dependencies = [
+    "numpy>1,<2",
+    "pandas<2",
+    "scipy",
+    "matplotlib<3.9",
+    "seaborn",
+    "opencv-python-headless",
+    "xarray",
+    "ecubevis",
+    "tensorflow>2,<2.17",
+    "keras>2,<2.17",
+    "scikit-learn",
+    "cartopy",
+    "climetlab",
+    "climetlab_maelstrom_downscaling"
+]
+
+# --- 分类器 (直接从 setup.py 转换) ---
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "Natural Language :: English",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering",
+]
+
+# --- 动态字段 (替换 setup.py 中的文件读取逻辑) ---
+dynamic = ["version", "readme"]
+
+[project.urls]
+# 从 setup.py 中的 url 转换而来
+Repository = "https://github.com/carlgogo/dl4ds"
+
+[project.optional-dependencies]
+# 从 setup.py 中的 extras_require 转换而来
+horovod = ["horovod"]
+
+# --- 构建工具 (setuptools) 特定配置 ---
+[tool.setuptools]
+# 对应 setup.py 中的 packages 列表
+packages = [
+    "dl4ds",
+    "dl4ds.models",
+    "dl4ds.training"
+]
+
+[tool.setuptools.dynamic]
+# 告诉 setuptools 如何动态获取 'version'
+# 这对应 setup.py 中读取 __init__.py 的逻辑
+version = {attr = "dl4ds.__version__"}
+
+# 告诉 setuptools 如何动态获取 'readme'
+# 这对应 setup.py 中读取 README.md 的逻辑
+readme = {file = ["README.md"], content-type = "text/markdown"}
