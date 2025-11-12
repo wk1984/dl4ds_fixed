@@ -22,21 +22,13 @@ cmlds_train = cml.load_dataset("maelstrom-downscaling-tier1", dataset="training"
 cmlds_val = cml.load_dataset("maelstrom-downscaling-tier1", dataset="validation")
 cmlds_test = cml.load_dataset("maelstrom-downscaling-tier1", dataset="testing")
 
-t2m_hr_train = cmlds_train.to_xarray().t2m_tar
-t2m_hr_test = cmlds_test.to_xarray().t2m_tar
-t2m_hr_val = cmlds_val.to_xarray().t2m_tar
+t2m_hr_train = cmlds_train.to_xarray().sel(lat=slice(52,50), lon=slice(15,17)).t2m_tar
+t2m_hr_test = cmlds_test.to_xarray().sel(lat=slice(52,50), lon=slice(15,17)).t2m_tar
+t2m_hr_val = cmlds_val.to_xarray().sel(lat=slice(52,50), lon=slice(15,17)).t2m_tar
 
-t2m_lr_train = cmlds_train.to_xarray().t2m_in
-t2m_lr_test = cmlds_test.to_xarray().t2m_in
-t2m_lr_val = cmlds_val.to_xarray().t2m_in
-
-z_hr_train = cmlds_train.to_xarray().z_tar
-z_hr_test = cmlds_test.to_xarray().z_tar
-z_hr_val = cmlds_val.to_xarray().z_tar
-
-z_lr_train = cmlds_train.to_xarray().z_in
-z_lr_test = cmlds_test.to_xarray().z_in
-z_lr_val = cmlds_val.to_xarray().z_in
+z_hr_train = cmlds_train.to_xarray().sel(lat=slice(52,50), lon=slice(15,17)).z_tar
+z_hr_test = cmlds_test.to_xarray().sel(lat=slice(52,50), lon=slice(15,17)).z_tar
+z_hr_val = cmlds_val.to_xarray().sel(lat=slice(52,50), lon=slice(15,17)).z_tar
 
 t2m_scaler_train = dds.StandardScaler(axis=None)
 t2m_scaler_train.fit(t2m_hr_train)  
@@ -44,19 +36,11 @@ y_train = t2m_scaler_train.transform(t2m_hr_train)
 y_test = t2m_scaler_train.transform(t2m_hr_test)
 y_val = t2m_scaler_train.transform(t2m_hr_val)
 
-x_train = t2m_scaler_train.transform(t2m_lr_train)
-x_test = t2m_scaler_train.transform(t2m_lr_test)
-x_val = t2m_scaler_train.transform(t2m_lr_val)
-
 z_scaler_train = dds.StandardScaler(axis=None)
 z_scaler_train.fit(z_hr_train)  
 y_z_train = z_scaler_train.transform(z_hr_train)
 y_z_test = z_scaler_train.transform(z_hr_test)
 y_z_val = z_scaler_train.transform(z_hr_val)
-
-x_z_train = z_scaler_train.transform(z_lr_train)
-x_z_test = z_scaler_train.transform(z_lr_test)
-x_z_val = z_scaler_train.transform(z_lr_val)
 
 y_train = y_train.expand_dims(dim='channel', axis=-1)
 y_test = y_test.expand_dims(dim='channel', axis=-1)
@@ -108,9 +92,9 @@ trainer = dds.SupervisedTrainer(
     predictors_test=[y_z_test],
     interpolation='inter_area',
     patch_size=None, 
-    batch_size=3, 
+    batch_size=10, 
     loss='mae',
-    epochs=3, 
+    epochs=1, 
     steps_per_epoch=None, 
     validation_steps=None, 
     test_steps=None, 
@@ -123,27 +107,5 @@ trainer = dds.SupervisedTrainer(
     **ARCH_PARAMS)
 
 trainer.run()
-
-pred = dds.Predictor(
-    trainer, 
-    y_test, 
-    scale=8, 
-    array_in_hr=True,
-    static_vars=None, 
-    predictors=[y_z_test], 
-    time_window=None,
-    interpolation='inter_area', 
-    batch_size=8,
-    scaler=t2m_scaler_train,
-    save_path=None,
-    save_fname=None,
-    return_lr=True,
-    device='CPU')
-
-unscaled_y_pred, coarsened_array = pred.run()
-
-unscaled_y_test = t2m_scaler_train.inverse_transform(y_test)
-
-# unscaled_y_test.to_netcdf('final_out.nc')
 
 print('All done')
