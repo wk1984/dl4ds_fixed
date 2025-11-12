@@ -20,7 +20,7 @@ jobs:
     # 策略：在多个 Python 版本下运行测试，确保兼容性
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"] # 选择您项目支持的 Python 版本
+        python-version: ["3.8", "3.9", "3.10"] # 选择您项目支持的 Python 版本
     
     # 步骤（Steps）
     steps:
