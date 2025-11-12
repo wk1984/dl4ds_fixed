@@ -32,7 +32,7 @@ RUN . /root/.bashrc \
 	
 # 创建CONDA环境来安装DL4DS降尺度软件
 
-ARG PY39=false
+ARG PY39=true
 
 RUN if [ "$PY39" = true ]; then \
     echo "try in Python 3.9 ..."; \
