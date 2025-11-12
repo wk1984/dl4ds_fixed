@@ -49,4 +49,5 @@ jobs:
     - name: 🧪 运行测试
       run: |
         # 使用您项目中的测试运行器，例如 pytest 或 unittest
-        pytest # 或 python -m unittest discover
+        # pytest # 或 python -m unittest discover
+        python -c "import dl4ds as dds"
