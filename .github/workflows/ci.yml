@@ -27,6 +27,12 @@ jobs:
     - name: ⬇️ 检出代码
       uses: actions/checkout@v4
       
+    # ➡️ 新增步骤：安装系统依赖 libgeos-dev
+    - name: ⚙️ 安装系统依赖 (libgeos-dev)
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install libgeos-dev -y
+      
     - name: ⚙️ 设置 Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
@@ -35,9 +41,7 @@ jobs:
         
     - name: 📦 安装依赖
       run: |
-        apt -y install libgeos-dev
         pip install -e .
-        
         
     - name: 🧪 运行测试
       run: |
