@@ -51,6 +51,7 @@ setup(
     'tensorflow>2,<2.11',
     'keras>2,<2.11',
     'scikit-learn',
+    'cartopy',
     'climetlab',
     'climetlab_maelstrom_downscaling',
     ],
