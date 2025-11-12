@@ -1,0 +1,58 @@
+# .github/workflows/python_ci.yml
+
+name: Python CI
+
+# 触发条件：在 push 或 pull_request 到 main 分支时运行
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  # 也可以添加 workflow_dispatch 允许手动触发
+  # workflow_dispatch:
+
+# 定义一个工作（Job）
+jobs:
+  build:
+    # 运行环境：使用最新的 Ubuntu 操作系统
+    runs-on: ubuntu-latest
+    
+    # 策略：在多个 Python 版本下运行测试，确保兼容性
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"] # 选择您项目支持的 Python 版本
+    
+    # 步骤（Steps）
+    steps:
+    - name: ⬇️ 检出代码
+      uses: actions/checkout@v4
+      
+    - name: ⚙️ 设置 Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip' # 启用 pip 缓存以加快安装速度
+        
+    - name: 📦 安装依赖
+      run: |
+        # 假设您的依赖在 requirements.txt 或 setup.py 中
+        # 如果是 setup.py 或 pyproject.toml 项目，使用 pip install .
+        # python -m pip install --upgrade pip
+        # 安装项目及其开发依赖（如果使用 requirements.txt）
+        # pip install -r requirements.txt
+        # 或者使用如下方式安装可编辑模式（推荐用于测试）
+        # pip install -e '.[dev]' # 假设 dev 是包含测试依赖的 extra
+        # 如果没有 setup.py/pyproject.toml，直接安装所需库
+        # pip install numpy pandas pytest # 示例
+        pip install -e .
+        
+    - name: 🧪 运行测试
+      run: |
+        # 使用您项目中的测试运行器，例如 pytest 或 unittest
+        pytest # 或 python -m unittest discover
+        
+    - name: 🧐 运行 Linting/静态分析 (可选)
+      # 推荐使用 flake8, black, mypy 等工具检查代码质量
+      # run: |
+      #   pip install flake8
+      #   flake8 . --count --show-source --statistics
