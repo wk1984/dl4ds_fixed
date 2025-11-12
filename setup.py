@@ -45,7 +45,7 @@ setup(
     'scipy',
     'matplotlib<3.5',
     'seaborn',
-    'cv2',
+    'opencv-python',
     'xarray',
     'ecubevis',
     'tensorflow>2,<2.11',
