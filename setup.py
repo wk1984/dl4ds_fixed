@@ -43,7 +43,7 @@ setup(
     'numpy>1,<2',
     'pandas<2',
     'scipy',
-    'matplotlib<3.9',
+    'matplotlib<3.5',
     'xarray',
     'ecubevis',
     'tensorflow>2,<2.11',
