@@ -51,6 +51,8 @@ setup(
     'tensorflow>2,<2.11',
     'keras>2,<2.11',
     'scikit-learn',
+    'climetlab',
+    'climetlab_maelstrom_downscaling',
     ],
     extras_require={
         'horovod':['horovod'] 
