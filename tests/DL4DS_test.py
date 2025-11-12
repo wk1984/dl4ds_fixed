@@ -46,22 +46,11 @@ y_train = y_train.expand_dims(dim='channel', axis=-1)
 y_test = y_test.expand_dims(dim='channel', axis=-1)
 y_val = y_val.expand_dims(dim='channel', axis=-1)
 
-x_train = x_train.expand_dims(dim='channel', axis=-1)
-x_test = x_test.expand_dims(dim='channel', axis=-1)
-x_val = x_val.expand_dims(dim='channel', axis=-1)
-
 y_z_train = y_z_train.expand_dims(dim='channel', axis=-1)
 y_z_test = y_z_test.expand_dims(dim='channel', axis=-1)
 y_z_val = y_z_val.expand_dims(dim='channel', axis=-1)
 
-x_z_train = x_z_train.expand_dims(dim='channel', axis=-1)
-x_z_test = x_z_test.expand_dims(dim='channel', axis=-1)
-x_z_val = x_z_val.expand_dims(dim='channel', axis=-1)
-
 print(y_train.shape, y_test.shape, y_val.shape)
-print(x_train.shape, x_test.shape, x_val.shape)
-
-print(x_z_train.shape, x_z_test.shape, x_z_val.shape)
 print(y_z_train.shape, y_z_test.shape, y_z_val.shape)
 
 _ = dds.create_pair_hr_lr(y_train.values[0], None, 'spc', 8, None, None, y_z_train.values[0], season=None, debug=False, interpolation='inter_area')
