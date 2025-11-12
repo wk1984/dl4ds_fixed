@@ -40,15 +40,14 @@ setup(
         'EO' 
         ],
     install_requires=[
-    'numpy<2',
+    'numpy>1,<2',
     'pandas',
     'scipy',
     'matplotlib',
     'xarray',
     'ecubevis',
-    'tensorflow<2.11', 
-    'tensorflow-gpu<2.11',
-    'keras<2.11',
+    'tensorflow>2,<2.11',
+    'keras>2,<2.11',
     'scikit-learn',
     ],
     extras_require={
