@@ -44,6 +44,7 @@ setup(
     'pandas<2',
     'scipy',
     'matplotlib<3.5',
+    'seaborn',
     'xarray',
     'ecubevis',
     'tensorflow>2,<2.11',
