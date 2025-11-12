@@ -52,6 +52,7 @@ RUN usermod -aG sudo user
 USER user
 WORKDIR /work
 
-RUN conda activate dl4ds_py39_cu11; \
+RUN . /root/.bashrc; \
+    conda activate dl4ds_py39_cu11; \
     which python ;\
     python -c "import dl4ds as dds"
