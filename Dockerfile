@@ -37,7 +37,7 @@ RUN if [ "$DL4DS" = true ]; then \
     mamba create -n dl4ds_py39_cu11 -c conda-forge python==3.9.* xarray cartopy cudatoolkit==11.* cudnn==8.* numpy==1.* -y; \
     conda activate dl4ds_py39_cu11; \
     pip install tensorflow==2.10.* ; \
-    pip install dl4ds climetlab climetlab_maelstrom_downscaling ; \
+    pip install dl4ds climetlab climetlab_maelstrom_downscaling  numpy==1.* ; \
     python -c "import tensorflow as tf; print('Built with CUDA:', tf.test.is_built_with_cuda(), 'USE GPU:', tf.config.list_physical_devices('GPU'))"; \
  	python -c "import dl4ds as dds"; \
 	fi
