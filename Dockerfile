@@ -32,15 +32,27 @@ RUN . /root/.bashrc \
 	
 # 创建CONDA环境来安装DL4DS降尺度软件
 
-ARG DL4DS=true
+ARG PY39=false
 
-RUN if [ "$DL4DS" = true ]; then \
-    echo "install DL4DS ..."; \
+RUN if [ "$PY39" = true ]; then \
+    echo "try in Python 3.9 ..."; \
     . /root/.bashrc; \ 
     conda create -n dl4ds_py39_cu11 -c conda-forge python==3.9.* gxx==9.* cudatoolkit==11.* cudnn==8.* numpy==1.* -y; \
     conda activate dl4ds_py39_cu11; \
     which python ;\
-#    pip install tensorflow==2.10.* climetlab climetlab_maelstrom_downscaling numpy==1.* ; \
+    pip install git+https://github.com/wk1984/dl4ds_fixed.git ; \
+    python -c "import tensorflow as tf; print('Built with CUDA:', tf.test.is_built_with_cuda(), 'USE GPU:', tf.config.list_physical_devices('GPU'))"; \
+ 	python -c "import dl4ds as dds"; \
+	fi
+	
+ARG PY310=true
+
+RUN if [ "$PY310" = true ]; then \
+    echo "try in Python 3.10 ..."; \
+    . /root/.bashrc; \ 
+    conda create -n dl4ds_py310_cu11 -c conda-forge python==3.10.* gxx==9.* cudatoolkit==11.* cudnn==8.* numpy==1.* -y; \
+    conda activate dl4ds_py3310_cu11; \
+    which python ;\
     pip install git+https://github.com/wk1984/dl4ds_fixed.git ; \
     python -c "import tensorflow as tf; print('Built with CUDA:', tf.test.is_built_with_cuda(), 'USE GPU:', tf.config.list_physical_devices('GPU'))"; \
  	python -c "import dl4ds as dds"; \
