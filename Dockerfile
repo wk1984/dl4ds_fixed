@@ -52,7 +52,7 @@ RUN usermod -aG sudo user
 USER user
 WORKDIR /work
 
-RUN /opt/miniconda3/bin/conda init bash \
+RUN /opt/miniconda3/bin/conda init bash; \
     conda activate dl4ds_py39_cu11; \
     which python ;\
     python -c "import dl4ds as dds"
