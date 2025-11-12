@@ -3,6 +3,8 @@ import warnings, os
 
 warnings.filterwarnings("ignore")
 
+os.environ['KEC_KERAS_TRACETBACK_FILTERING'] = '0'
+
 import numpy as np
 import xarray as xr
 import ecubevis as ecv
