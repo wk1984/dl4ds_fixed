@@ -50,9 +50,3 @@ jobs:
       run: |
         # 使用您项目中的测试运行器，例如 pytest 或 unittest
         pytest # 或 python -m unittest discover
-        
-    - name: 🧐 运行 Linting/静态分析 (可选)
-      # 推荐使用 flake8, black, mypy 等工具检查代码质量
-      # run: |
-      #   pip install flake8
-      #   flake8 . --count --show-source --statistics
