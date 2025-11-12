@@ -53,7 +53,7 @@ setup(
     'scikit-learn',
     'cartopy',
     'climetlab',
-    'climetlab_maelstrom_downscaling',
+    'climetlab_maelstrom_downscaling'
     ],
     extras_require={
         'horovod':['horovod'] 
