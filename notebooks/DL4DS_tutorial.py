@@ -20,47 +20,37 @@ try:
     cmlds_train = xr.open_dataset('cmlds_train.nc')
     cmlds_test  = xr.open_dataset('cmlds_test.nc')
     cmlds_val   = xr.open_dataset('cmlds_val.nc')
+
 except:
+    
     print('try to download datasets from MAELSTROM project ...')
     cmlds_train = cml.load_dataset("maelstrom-downscaling-tier1", dataset="training")
     cmlds_val = cml.load_dataset("maelstrom-downscaling-tier1", dataset="validation")
     cmlds_test = cml.load_dataset("maelstrom-downscaling-tier1", dataset="testing")
 
-if use_local:
+    t2m_hr_train = cmlds_train.to_xarray().to_netcdf('cmlds_train.nc')
+    t2m_hr_test = cmlds_test.to_xarray().to_netcdf('cmlds_test.nc')
+    t2m_hr_val = cmlds_val.to_xarray().to_netcdf('cmlds_val.nc')
 
-    t2m_hr_train = cmlds_train.t2m_tar
-    t2m_hr_test = cmlds_test.t2m_tar
-    t2m_hr_val = cmlds_val.t2m_tar
+    cmlds_train = xr.open_dataset('cmlds_train.nc')
+    cmlds_test  = xr.open_dataset('cmlds_test.nc')
+    cmlds_val   = xr.open_dataset('cmlds_val.nc')
 
-    t2m_lr_train = cmlds_train.t2m_in
-    t2m_lr_test = cmlds_test.t2m_in
-    t2m_lr_val = cmlds_val.t2m_in
+t2m_hr_train = cmlds_train.t2m_tar
+t2m_hr_test = cmlds_test.t2m_tar
+t2m_hr_val = cmlds_val.t2m_tar
 
-    z_hr_train = cmlds_train.z_tar
-    z_hr_test = cmlds_test.z_tar
-    z_hr_val = cmlds_val.z_tar
+t2m_lr_train = cmlds_train.t2m_in
+t2m_lr_test = cmlds_test.t2m_in
+t2m_lr_val = cmlds_val.t2m_in
 
-    z_lr_train = cmlds_train.z_in
-    z_lr_test = cmlds_test.z_in
-    z_lr_val = cmlds_val.z_in
+z_hr_train = cmlds_train.z_tar
+z_hr_test = cmlds_test.z_tar
+z_hr_val = cmlds_val.z_tar
 
-else:
-
-    t2m_hr_train = cmlds_train.to_xarray().t2m_tar
-    t2m_hr_test = cmlds_test.to_xarray().t2m_tar
-    t2m_hr_val = cmlds_val.to_xarray().t2m_tar
-
-    t2m_lr_train = cmlds_train.to_xarray().t2m_in
-    t2m_lr_test = cmlds_test.to_xarray().t2m_in
-    t2m_lr_val = cmlds_val.to_xarray().t2m_in
-
-    z_hr_train = cmlds_train.to_xarray().z_tar
-    z_hr_test = cmlds_test.to_xarray().z_tar
-    z_hr_val = cmlds_val.to_xarray().z_tar
-
-    z_lr_train = cmlds_train.to_xarray().z_in
-    z_lr_test = cmlds_test.to_xarray().z_in
-    z_lr_val = cmlds_val.to_xarray().z_in
+z_lr_train = cmlds_train.z_in
+z_lr_test = cmlds_test.z_in
+z_lr_val = cmlds_val.z_in
 
 t2m_scaler_train = dds.StandardScaler(axis=None)
 t2m_scaler_train.fit(t2m_hr_train)  
