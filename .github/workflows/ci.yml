@@ -35,19 +35,10 @@ jobs:
         
     - name: 📦 安装依赖
       run: |
-        # 假设您的依赖在 requirements.txt 或 setup.py 中
-        # 如果是 setup.py 或 pyproject.toml 项目，使用 pip install .
-        # python -m pip install --upgrade pip
-        # 安装项目及其开发依赖（如果使用 requirements.txt）
-        # pip install -r requirements.txt
-        # 或者使用如下方式安装可编辑模式（推荐用于测试）
-        # pip install -e '.[dev]' # 假设 dev 是包含测试依赖的 extra
-        # 如果没有 setup.py/pyproject.toml，直接安装所需库
-        # pip install numpy pandas pytest # 示例
         pip install -e .
         
     - name: 🧪 运行测试
       run: |
         # 使用您项目中的测试运行器，例如 pytest 或 unittest
-        # pytest # 或 python -m unittest discover
-        python -c "import dl4ds as dds"
+        pytest
+        # python -c "import dl4ds as dds"
