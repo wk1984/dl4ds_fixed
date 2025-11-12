@@ -46,12 +46,12 @@ RUN if [ "$DL4DS" = true ]; then \
  	python -c "import dl4ds as dds"; \
 	fi
 	    
-RUN useradd -m -s /bin/bash user && echo "user:111" | chpasswd
-RUN usermod -aG sudo user
-
-USER user
-WORKDIR /work
-
-RUN /opt/miniconda3/bin/activate dl4ds_py39_cu11; \
-    which python ;\
-    python -c "import dl4ds as dds"
+# RUN useradd -m -s /bin/bash user && echo "user:111" | chpasswd
+# RUN usermod -aG sudo user
+# 
+# USER user
+# WORKDIR /work
+# 
+# RUN /opt/miniconda3/bin/activate dl4ds_py39_cu11; \
+#     which python ;\
+#     python -c "import dl4ds as dds"
