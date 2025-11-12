@@ -15,7 +15,7 @@ RUN apt-get update -y && \
 #=============================================================================================
 
 ARG url0=https://github.com/conda-forge/miniforge/releases/download/22.9.0-2/Miniforge3-22.9.0-2-Linux-x86_64.sh
-ARG url0=https://github.com/conda-forge/miniforge/releases/download/4.12.0-0/Miniforge3-4.12.0-0-Linux-x86_64.sh
+# ARG url0=https://github.com/conda-forge/miniforge/releases/download/4.12.0-0/Miniforge3-4.12.0-0-Linux-x86_64.sh
 
 RUN wget --quiet ${url0} -O ~/miniconda.sh \
     && /bin/bash ~/miniconda.sh -b -p /opt/miniconda3 \
@@ -36,7 +36,7 @@ ARG DL4DS=true
 RUN if [ "$DL4DS" = true ]; then \
     echo "install DL4DS ..."; \
     . /root/.bashrc; \ 
-    conda create -n dl4ds_py39_cu11 -c conda-forge python==3.9.* xarray cartopy cudatoolkit==11.* cudnn==8.* numpy==1.* -y; \
+    mamba create -n dl4ds_py39_cu11 -c conda-forge python==3.9.* xarray cartopy cudatoolkit==11.* cudnn==8.* numpy==1.* -y; \
     conda activate dl4ds_py39_cu11; \
     which python ;\
 #    pip install tensorflow==2.10.* climetlab climetlab_maelstrom_downscaling numpy==1.* ; \
