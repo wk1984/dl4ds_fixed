@@ -45,7 +45,7 @@ RUN if [ "$DL4DS" = true ]; then \
 	fi
 	    
 RUN useradd -m -s /bin/bash user && echo "user:111" | chpasswd
-RUN usermod -aG wheel user
+RUN usermod -aG sudo user
 
 USER user
 WORKDIR /work
