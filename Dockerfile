@@ -14,7 +14,9 @@ RUN apt-get update -y && \
 #  Set up Python Jupyter Environment ...
 #=============================================================================================
 
-RUN wget --quiet https://github.com/conda-forge/miniforge/releases/download/23.11.0-0/Mambaforge-23.11.0-0-Linux-x86_64.sh -O ~/miniconda.sh \
+ARG url0=https://github.com/conda-forge/miniforge/releases/download/22.9.0-2/Miniforge3-22.9.0-2-Linux-x86_64.sh
+
+RUN wget --quiet ${url0} -O ~/miniconda.sh \
     && /bin/bash ~/miniconda.sh -b -p /opt/miniconda3 \
     && rm ~/miniconda.sh \
     && ln -s /opt/miniconda3/etc/profile.d/conda.sh /etc/profile.d/conda.sh \
@@ -35,8 +37,7 @@ RUN if [ "$DL4DS" = true ]; then \
     . /root/.bashrc; \ 
     mamba create -n dl4ds_py39_cu11 -c conda-forge python==3.9.* xarray cartopy cudatoolkit==11.* cudnn==8.* numpy==1.* g++==11.* -y; \
     conda activate dl4ds_py39_cu11; \
-    pip install tensorflow==2.10.* ; \
-    pip install climetlab climetlab_maelstrom_downscaling numpy==1.* ; \
+    pip install tensorflow==2.10.* climetlab climetlab_maelstrom_downscaling numpy==1.* ; \
     pip install git+https://github.com/wk1984/dl4ds_fixed.git ; \
     python -c "import tensorflow as tf; print('Built with CUDA:', tf.test.is_built_with_cuda(), 'USE GPU:', tf.config.list_physical_devices('GPU'))"; \
  	python -c "import dl4ds as dds"; \
