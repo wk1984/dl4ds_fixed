@@ -57,6 +57,19 @@ RUN if [ "$PY310" = true ]; then \
     python -c "import tensorflow as tf; print('Built with CUDA:', tf.test.is_built_with_cuda(), 'USE GPU:', tf.config.list_physical_devices('GPU'))"; \
  	python -c "import dl4ds as dds"; \
 	fi
+	
+ARG PY311=true
+
+RUN if [ "$PY311" = true ]; then \
+    echo "try in Python 3.11 ..."; \
+    . /root/.bashrc; \ 
+    conda create -n dl4ds_py311_cu11 -c conda-forge python==3.11.* gxx==9.* cudatoolkit==11.* cudnn==8.* numpy==1.* -y -q; \
+    conda activate dl4ds_py311_cu11; \
+    which python ;\
+    pip install git+https://github.com/wk1984/dl4ds_fixed.git ; \
+    python -c "import tensorflow as tf; print('Built with CUDA:', tf.test.is_built_with_cuda(), 'USE GPU:', tf.config.list_physical_devices('GPU'))"; \
+ 	python -c "import dl4ds as dds"; \
+	fi
 	    
 # RUN useradd -m -s /bin/bash user && echo "user:111" | chpasswd
 # RUN usermod -aG sudo user
