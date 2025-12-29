@@ -70,7 +70,8 @@ horovod = ["horovod"]
 packages = [
     "dl4ds",
     "dl4ds.models",
-    "dl4ds.training"
+    "dl4ds.training",
+    "dl4ds.tests"
 ]
 
 [tool.setuptools.dynamic]
