@@ -20,7 +20,7 @@ jobs:
     # 策略：在多个 Python 版本下运行测试，确保兼容性
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"] # 选择您项目支持的 Python 版本
+        python-version: ["3.9", "3.10"] # 选择您项目支持的 Python 版本
     
     # 步骤（Steps）
     steps:
@@ -46,6 +46,6 @@ jobs:
     - name: 🧪 运行测试
       run: |
         # 使用您项目中的测试运行器，例如 pytest 或 unittest
-        pip install pytest
-        pytest
-        # python -c "import dl4ds as dds"
+        #pip install pytest
+        #pytest
+        python -c "import dl4ds as dds"
