@@ -1,100 +1,53 @@
-
-import warnings, os
-
-warnings.filterwarnings("ignore")
-
-os.environ['KEC_KERAS_TRACETBACK_FILTERING'] = '0'
-
+import pytest
 import numpy as np
 import xarray as xr
-import ecubevis as ecv
 import dl4ds as dds
-import scipy as sp
-import netCDF4 as nc
-import climetlab as cml
+import tensorflow as tf
 
-import tensorflow as tf 
-from tensorflow import keras
-from tensorflow.keras import models
+def test_dds_trainer_integration():
+    """
+    测试 dl4ds 训练流程的冒烟测试
+    """
+    # 1. 构造极小的模拟数据 (代替 climetlab 下载)
+    shape = (10, 8, 8, 1) # [时间, 宽, 高, 通道]
+    data = np.random.rand(*shape).astype('float32')
+    
+    # 转换为 xarray (dl4ds 常用格式)
+    da = xr.DataArray(data, dims=['time', 'lat', 'lon', 'channel'])
+    
+    # 2. 极简配置
+    ARCH_PARAMS = dict(
+        n_filters=4, # 减少滤镜
+        n_blocks=2,   # 减少块
+        normalization=None,
+        activation='relu',
+        localcon_layer=True)
 
-print('try to download datasets from MAELSTROM project ...')
-cmlds_train = cml.load_dataset("maelstrom-downscaling-tier1", dataset="training")
-cmlds_val = cml.load_dataset("maelstrom-downscaling-tier1", dataset="validation")
-cmlds_test = cml.load_dataset("maelstrom-downscaling-tier1", dataset="testing")
+    # 3. 初始化 Trainer
+    trainer = dds.SupervisedTrainer(
+        backbone='resnet',
+        upsampling='spc', 
+        data_train=da, 
+        data_val=da,
+        data_test=da,
+        scale=2, # 缩小倍数以加快速度
+        batch_size=2, 
+        loss='mae',
+        epochs=1,     # 只跑 1 个 epoch 验证流程
+        show_plot=False, # CI 环境必须关闭
+        verbose=True, 
+        device='CPU', 
+        **ARCH_PARAMS)
 
-t2m_hr_train = cmlds_train.to_xarray().sel(lat=slice(52,50), lon=slice(15,17)).t2m_tar
-t2m_hr_test = cmlds_test.to_xarray().sel(lat=slice(52,50), lon=slice(15,17)).t2m_tar
-t2m_hr_val = cmlds_val.to_xarray().sel(lat=slice(52,50), lon=slice(15,17)).t2m_tar
+    # 4. 运行
+    try:
+        trainer.run()
+        run_success = True
+    except Exception as e:
+        run_success = False
+        print(f"Training failed: {e}")
 
-z_hr_train = cmlds_train.to_xarray().sel(lat=slice(52,50), lon=slice(15,17)).z_tar
-z_hr_test = cmlds_test.to_xarray().sel(lat=slice(52,50), lon=slice(15,17)).z_tar
-z_hr_val = cmlds_val.to_xarray().sel(lat=slice(52,50), lon=slice(15,17)).z_tar
-
-t2m_scaler_train = dds.StandardScaler(axis=None)
-t2m_scaler_train.fit(t2m_hr_train)  
-y_train = t2m_scaler_train.transform(t2m_hr_train)
-y_test = t2m_scaler_train.transform(t2m_hr_test)
-y_val = t2m_scaler_train.transform(t2m_hr_val)
-
-z_scaler_train = dds.StandardScaler(axis=None)
-z_scaler_train.fit(z_hr_train)  
-y_z_train = z_scaler_train.transform(z_hr_train)
-y_z_test = z_scaler_train.transform(z_hr_test)
-y_z_val = z_scaler_train.transform(z_hr_val)
-
-y_train = y_train.expand_dims(dim='channel', axis=-1)
-y_test = y_test.expand_dims(dim='channel', axis=-1)
-y_val = y_val.expand_dims(dim='channel', axis=-1)
-
-y_z_train = y_z_train.expand_dims(dim='channel', axis=-1)
-y_z_test = y_z_test.expand_dims(dim='channel', axis=-1)
-y_z_val = y_z_val.expand_dims(dim='channel', axis=-1)
-
-print(y_train.shape, y_test.shape, y_val.shape)
-print(y_z_train.shape, y_z_test.shape, y_z_val.shape)
-
-_ = dds.create_pair_hr_lr(y_train.values[0], None, 'spc', 8, None, None, y_z_train.values[0], season=None, debug=False, interpolation='inter_area')
-
-ARCH_PARAMS = dict(n_filters=8,
-                   n_blocks=8,
-                   normalization=None,
-                   dropout_rate=0.0,
-                   dropout_variant='spatial',
-                   attention=False,
-                   activation='relu',
-                   localcon_layer=True)
-
-trainer = dds.SupervisedTrainer(
-    backbone='resnet',
-    upsampling='spc', 
-    data_train=y_train, 
-    data_val=y_val,
-    data_test=y_test,
-    data_train_lr=None, # here you can pass the LR dataset for training with explicit paired samples
-    data_val_lr=None, # here you can pass the LR dataset for training with explicit paired samples
-    data_test_lr=None, # here you can pass the LR dataset for training with explicit paired samples
-    scale=3,
-    time_window=None, 
-    static_vars=None,
-    predictors_train=[y_z_train],
-    predictors_val=[y_z_val],
-    predictors_test=[y_z_test],
-    interpolation='inter_area',
-    patch_size=None, 
-    batch_size=60, 
-    loss='mae',
-    epochs=100, 
-    steps_per_epoch=None, 
-    validation_steps=None, 
-    test_steps=None, 
-    learning_rate=(1e-3, 1e-4), lr_decay_after=1e4,
-    early_stopping=False, patience=6, min_delta=0, 
-    save=False, 
-    save_path=None,
-    show_plot=True, verbose=True, 
-    device='CPU', 
-    **ARCH_PARAMS)
-
-trainer.run()
-
-print('All done')
+    # 5. 断言
+    assert run_success is True
+    # 也可以检查模型是否生成
+    assert trainer.model is not None
